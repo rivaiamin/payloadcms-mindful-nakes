@@ -1,0 +1,75 @@
+---
+description: Mental Health Web App for Nakes (Tenaga Kesehatan)
+techStack: NextJS 14 + App Router, TailwindCSS, Supabase, PayloadCMS
+alwaysApply: true
+---
+# =========================
+# CURSOR GLOBAL PROJECT RULES
+# Mental Health Web App for Nakes
+# =========================
+
+# --- GENERAL ---
+- Always follow the PRD specifications. Do not invent features.
+- Always use: NextJS 14 + App Router, TailwindCSS, Supabase, PayloadCMS.
+- Use Server Components by default; only use Client Components when state or event handlers are required.
+- Prefer modern NextJS patterns: server actions, parallel routes, dynamic routes, middleware.
+
+# --- CODE STRUCTURE ---
+- All UI components must be in /components.
+- All pages must be in /app.
+- Use /lib for helpers, utils, DB, and service wrappers.
+- Use /app/api for server API endpoints when necessary.
+- Keep code clean, typed (TypeScript), and modular.
+
+# --- AUTHENTICATION ---
+- Must use Supabase Auth.
+- Protect all /app routes except /login and /register.
+- Implement middleware:
+  - If user is authenticated but has not done today’s quiz → redirect to /quiz.
+
+# --- DATABASE RULES ---
+- Use Supabase Row Level Security.
+- Use Drizzle ORM or Supabase JS Client (either acceptable).
+- Table names: users, daily_quiz, journal.
+- Daily quiz must be unique per user per day.
+- Quiz score must be computed server-side, not on the client.
+
+# --- QUIZ LOGIC ---
+- Quiz contains 10 fixed questions (store static JSON).
+- 1–5 Likert scale.
+- Score mapping:
+  - 0–13: "ringan"
+  - 14–20: "sedang"
+  - 21+: "berat"
+- After quiz submit:
+  - ringan/sedang → redirect /journal
+  - berat → redirect /consultation
+
+# --- JOURNALING ---
+- Require journal after quiz except when quiz = berat.
+- Journaling saves: title, content, mood (1–5).
+
+# --- ADMIN RULES ---
+- Admin views all users, quizzes, journals.
+- Admin can CRUD mindfulness content via PayloadCMS only.
+- For admin dashboard: use server actions to fetch aggregated stats.
+
+# --- UI RULES ---
+- Use TailwindCSS strictly.
+- Components must be responsive.
+- Prefer shadcn/ui for form elements, modals, buttons.
+- Graphs: use Recharts or Chart.js.
+
+# --- SECURITY ---
+- Do not expose secrets.
+- Use environment variables for Supabase keys.
+- Implement server-side authorization check for all admin functions.
+
+# --- OUTPUT RULES ---
+- When generating code: always provide the full file content unless the user specifically asks for diffs or partials.
+- When modifying a file: show only the modified version.
+- When creating new files: include the full path and content.
+
+# =========================
+# END OF CURSOR RULES
+# =========================
