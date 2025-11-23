@@ -40,7 +40,7 @@ PAYLOAD_SECRET=your_payload_secret
 
 **Verification**: After running, check the Table Editor in Supabase to see:
 - `users` table
-- `daily_quiz` table  
+- `daily_quiz` table
 - `journal` table
 
 ## Step 5: Create Supabase Client Utilities

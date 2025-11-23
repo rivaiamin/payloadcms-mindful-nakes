@@ -23,8 +23,8 @@ export default async function LoginPage() {
             Kesehatan Mental Tenaga Kesehatan
           </h2>
           <p className="text-lg text-primary-foreground/90">
-            Platform untuk memantau dan menjaga kesehatan mental Anda dengan
-            quiz harian, jurnal, dan konten mindfulness yang disesuaikan.
+            Platform untuk memantau dan menjaga kesehatan mental Anda dengan quiz harian, jurnal,
+            dan konten mindfulness yang disesuaikan.
           </p>
           <div className="flex items-center justify-center gap-2 text-primary-foreground/80">
             <div className="h-px w-12 bg-primary-foreground/30" />
@@ -39,9 +39,7 @@ export default async function LoginPage() {
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-foreground">Masuk</h1>
-            <p className="text-muted-foreground">
-              Masuk ke akun Anda untuk melanjutkan
-            </p>
+            <p className="text-muted-foreground">Masuk ke akun Anda untuk melanjutkan</p>
           </div>
           <LoginForm />
         </div>

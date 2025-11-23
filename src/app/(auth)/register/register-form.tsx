@@ -116,9 +116,7 @@ export function RegisterForm() {
           disabled={isLoading}
           className="bg-background"
         />
-        <p className="text-xs text-muted-foreground">
-          Minimal 6 karakter
-        </p>
+        <p className="text-xs text-muted-foreground">Minimal 6 karakter</p>
       </div>
 
       <div className="space-y-2">
@@ -153,14 +151,10 @@ export function RegisterForm() {
 
       <div className="text-center text-sm">
         <span className="text-muted-foreground">Sudah punya akun? </span>
-        <a
-          href="/login"
-          className="text-primary font-medium hover:underline"
-        >
+        <a href="/login" className="text-primary font-medium hover:underline">
           Masuk
         </a>
       </div>
     </form>
   )
 }
-

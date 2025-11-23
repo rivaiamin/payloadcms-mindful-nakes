@@ -105,14 +105,10 @@ export function LoginForm() {
 
       <div className="text-center text-sm">
         <span className="text-muted-foreground">Belum punya akun? </span>
-        <a
-          href="/register"
-          className="text-primary font-medium hover:underline"
-        >
+        <a href="/register" className="text-primary font-medium hover:underline">
           Daftar sekarang
         </a>
       </div>
     </form>
   )
 }
-

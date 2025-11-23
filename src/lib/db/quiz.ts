@@ -27,11 +27,7 @@ export async function createQuiz(quizData: {
   category: 'ringan' | 'sedang' | 'berat'
 }) {
   const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('daily_quiz')
-    .insert(quizData)
-    .select()
-    .single()
+  const { data, error } = await supabase.from('daily_quiz').insert(quizData).select().single()
 
   return { data: data as DailyQuiz | null, error }
 }
@@ -71,4 +67,3 @@ export async function getQuizStats(userId: string, days = 30) {
 
   return (data || []) as DailyQuiz[]
 }
-

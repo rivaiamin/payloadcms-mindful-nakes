@@ -27,11 +27,7 @@ export async function createJournal(journalData: {
   mood: number
 }) {
   const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('journal')
-    .insert(journalData)
-    .select()
-    .single()
+  const { data, error } = await supabase.from('journal').insert(journalData).select().single()
 
   return { data: data as Journal | null, error }
 }
@@ -70,4 +66,3 @@ export async function getJournalHistory(userId: string, limit = 30) {
 
   return (data || []) as Journal[]
 }
-

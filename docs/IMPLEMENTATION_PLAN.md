@@ -5,11 +5,11 @@
 ### Phase 0: Foundation & Environment Setup
 
 #### 1. **Supabase Setup**
-- [ ] Create Supabase project
-- [ ] Get Supabase URL and anon key
-- [ ] Install Supabase client: `pnpm add @supabase/supabase-js @supabase/ssr`
-- [ ] Create `.env.local` with Supabase credentials
-- [ ] Set up Supabase Auth (email/password)
+- [x] Create Supabase project
+- [x] Get Supabase URL and anon key
+- [x] Install Supabase client: `pnpm add @supabase/supabase-js @supabase/ssr`
+- [x] Create `.env.local` with Supabase credentials
+- [x] Set up Supabase Auth (email/password)
 
 #### 2. **Database Schema Setup**
 - [ ] Create `users` table in Supabase (extend auth.users or create public.users)
@@ -36,12 +36,12 @@
 ## Phase 1: Authentication & Core Infrastructure (Week 1)
 
 ### 1.1 Authentication System
-- [ ] Create `/app/login` page
-- [ ] Create `/app/register` page
-- [ ] Implement Supabase Auth integration
-- [ ] Create auth middleware
-- [ ] Set up session management
-- [ ] Implement auto-logout on idle
+- [x] Create `/app/login` page
+- [x] Create `/app/register` page
+- [x] Implement Supabase Auth integration
+- [x] Create auth middleware
+- [x] Set up session management
+- [x] Implement auto-logout on idle
 
 ### 1.2 Database Utilities
 - [ ] Create `lib/supabase/client.ts` (browser client)

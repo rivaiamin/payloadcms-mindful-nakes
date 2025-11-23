@@ -19,13 +19,10 @@ export default async function RegisterPage() {
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-primary/90 to-primary items-center justify-center p-12">
         <div className="absolute inset-0 bg-[url('/website-template-OG.webp')] bg-cover bg-center opacity-20" />
         <div className="relative z-10 text-center space-y-6 max-w-md">
-          <h2 className="text-4xl font-bold text-primary-foreground">
-            Mulai Perjalanan Anda
-          </h2>
+          <h2 className="text-4xl font-bold text-primary-foreground">Mulai Perjalanan Anda</h2>
           <p className="text-lg text-primary-foreground/90">
-            Bergabunglah dengan komunitas tenaga kesehatan yang peduli dengan
-            kesehatan mental. Dapatkan akses ke tools dan konten yang membantu
-            Anda menjaga keseimbangan mental.
+            Bergabunglah dengan komunitas tenaga kesehatan yang peduli dengan kesehatan mental.
+            Dapatkan akses ke tools dan konten yang membantu Anda menjaga keseimbangan mental.
           </p>
           <div className="flex items-center justify-center gap-2 text-primary-foreground/80">
             <div className="h-px w-12 bg-primary-foreground/30" />

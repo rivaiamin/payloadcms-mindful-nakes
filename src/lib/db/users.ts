@@ -26,11 +26,7 @@ export async function getUser() {
 
 export async function getUserById(userId: string) {
   const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('app_users')
-    .select('*')
-    .eq('id', userId)
-    .single()
+  const { data, error } = await supabase.from('app_users').select('*').eq('id', userId).single()
 
   if (error || !data) {
     return null
@@ -48,4 +44,3 @@ export async function updateUserLastQuizDate(userId: string, date: string) {
 
   return { error }
 }
-

@@ -14,10 +14,6 @@ const sizeClasses = {
 
 export function Spinner({ className, size = 'md' }: SpinnerProps) {
   return (
-    <Loader2
-      className={cn('animate-spin', sizeClasses[size], className)}
-      aria-label="Loading"
-    />
+    <Loader2 className={cn('animate-spin', sizeClasses[size], className)} aria-label="Loading" />
   )
 }
-
