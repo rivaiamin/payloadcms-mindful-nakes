@@ -91,23 +91,49 @@ export async function createClient() {
 
 ## Step 6: Create Quiz Questions Data
 
-Create `src/data/quiz-questions.json`:
+Create `src/data/quiz-questions.json` with all 20 Zung Self Anxiety Rating Scale questions:
 
 ```json
 [
-  {
-    "id": 1,
-    "question": "Saya merasa cemas tentang pekerjaan hari ini",
-    "type": "anxiety"
-  },
-  {
-    "id": 2,
-    "question": "Saya mengalami kesulitan tidur karena memikirkan pekerjaan",
-    "type": "sleep"
-  }
-  // ... add 8 more questions
+  { "id": 1, "text": "Saya merasa lebih gelisah dan cemas dari biasanya" },
+  { "id": 2, "text": "Saya merasa takut tanpa alasan yang jelas" },
+  { "id": 3, "text": "Saya merasa panik" },
+  { "id": 4, "text": "Saya merasa tubuh saya seperti hancur berantakan dan akan hancur berkeping-keping" },
+  { "id": 5, "text": "Saya merasa semua baik-baik saja dan tidak akan ada hal buruk yang terjadi", "reverse": true },
+  { "id": 6, "text": "Kedua tangan dan kaki saya gemetar" },
+  { "id": 7, "text": "Saya sering terganggu oleh sakit kepala, leher, dan punggung" },
+  { "id": 8, "text": "Saya merasa badan saya lemah dan mudah lelah" },
+  { "id": 9, "text": "Saya merasa tenang dan dapat duduk dengan nyaman", "reverse": true },
+  { "id": 10, "text": "Saya merasa jantung saya berdebar-debar dengan keras dan cepat" },
+  { "id": 11, "text": "Saya sering mengalami pusing" },
+  { "id": 12, "text": "Saya sering pingsan atau merasa seperti ingin pingsan" },
+  { "id": 13, "text": "Saya dapat bernafas dengan mudah seperti biasanya", "reverse": true },
+  { "id": 14, "text": "Saya merasa kaku atau mati rasa dan kesemutan pada jari-jari dan kaki saya" },
+  { "id": 15, "text": "Saya merasa sakit perut atau gangguan pencernaan" },
+  { "id": 16, "text": "Saya merasa sering kencing daripada biasanya" },
+  { "id": 17, "text": "Tangan saya hangat dan kering seperti biasanya", "reverse": true },
+  { "id": 18, "text": "Wajah saya terasa panas dan kemerahan" },
+  { "id": 19, "text": "Tadi malam saya dapat tidur dan beristirahat pada malam hari dengan tenang", "reverse": true },
+  { "id": 20, "text": "Saya mengalami mimpi-mimpi buruk" }
 ]
 ```
+
+**Answer Options (4-point Likert scale):**
+- `1` = "Tidak pernah" (Never)
+- `2` = "Kadang-kadang" (Sometimes)
+- `3` = "Sering" (Often)
+- `4` = "Selalu" (Always)
+
+**Note:** Questions with `"reverse": true` (items 5, 9, 13, 17, 19) must be reverse-scored when calculating the total score:
+- 1 → 4, 2 → 3, 3 → 2, 4 → 1
+
+**Score Categories:**
+- 20–44: "normal"
+- 45–59: "sedang"
+- 60–74: "berat"
+- ≥ 75: "panik"
+
+See `docs/QUIZ_ZUNG.md` for complete scoring logic and business rules.
 
 ## Step 7: Create TypeScript Types
 
@@ -201,14 +227,14 @@ pnpm add chart.js react-chartjs-2
 
 ## Verification Checklist
 
-- [ ] Supabase project created
-- [ ] Environment variables set
-- [ ] Database schema created
-- [ ] RLS policies active
-- [ ] Supabase client utilities created
-- [ ] Middleware file created
+- [x] Supabase project created
+- [x] Environment variables set
+- [x] Database schema created
+- [x] RLS policies active
+- [x] Supabase client utilities created
+- [x] Middleware file created
 - [ ] Can connect to Supabase (test route works)
-- [ ] TypeScript types defined
+- [x] TypeScript types defined
 
 ## Next Steps
 
