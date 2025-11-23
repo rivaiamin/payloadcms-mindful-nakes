@@ -45,11 +45,11 @@
 - [x] Implement auto-logout on idle
 
 ### 1.2 Database Utilities
-- [ ] Create `lib/supabase/client.ts` (browser client)
-- [ ] Create `lib/supabase/server.ts` (server client)
-- [ ] Create `lib/db/users.ts` (user queries)
-- [ ] Create `lib/db/quiz.ts` (quiz queries)
-- [ ] Create `lib/db/journal.ts` (journal queries)
+- [x] Create `lib/supabase/client.ts` (browser client)
+- [x] Create `lib/supabase/server.ts` (server client)
+- [x] Create `lib/db/users.ts` (user queries)
+- [x] Create `lib/db/quiz.ts` (quiz queries)
+- [x] Create `lib/db/journal.ts` (journal queries)
 
 ### 1.3 Middleware & Routing
 - [ ] Create `middleware.ts` with quiz blocking logic
