@@ -52,9 +52,9 @@
 - [x] Create `lib/db/journal.ts` (journal queries)
 
 ### 1.3 Middleware & Routing
-- [ ] Create `middleware.ts` with quiz blocking logic
-- [ ] Set up protected routes
-- [ ] Implement redirect logic (quiz → journal/consultation)
+- [x] Create `middleware.ts` with quiz blocking logic
+- [x] Set up protected routes
+- [x] Implement redirect logic (quiz → journal/consultation)
 
 ---
 

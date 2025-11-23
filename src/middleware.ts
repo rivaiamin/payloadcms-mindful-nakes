@@ -1,6 +1,16 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+/**
+ * Middleware for authentication, route protection, and quiz blocking logic
+ *
+ * Flow:
+ * 1. Exclude PayloadCMS admin and API routes
+ * 2. Redirect unauthenticated users to login (except public routes)
+ * 3. Redirect authenticated users away from auth pages
+ * 4. Block access to protected routes if today's quiz is not completed
+ * 5. Admins skip quiz blocking
+ */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -35,48 +45,65 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  // Exclude PayloadCMS admin routes and API routes from auth checks
+  // 1. Exclude PayloadCMS admin routes and API routes from auth checks
   if (pathname.startsWith('/admin') || pathname.startsWith('/api')) {
     return response
   }
 
-  // Public routes that don't require authentication
+  // 2. Define route categories
   const publicRoutes = ['/login', '/register']
   const isPublicRoute = publicRoutes.includes(pathname)
 
-  // If user is not authenticated and trying to access protected route
+  // Routes that are part of the quiz flow - allow access even without completing quiz
+  const quizFlowRoutes = ['/quiz', '/consultation', '/journal']
+  const isQuizFlowRoute = quizFlowRoutes.some((route) => pathname.startsWith(route))
+
+  // 3. Handle unauthenticated users
   if (!user && !isPublicRoute) {
     const redirectUrl = new URL('/login', request.url)
     redirectUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(redirectUrl)
   }
 
-  // If user is authenticated and trying to access auth pages, redirect to quiz
+  // 4. Handle authenticated users trying to access auth pages
   if (user && isPublicRoute) {
     return NextResponse.redirect(new URL('/quiz', request.url))
   }
 
-  // Quiz blocking logic: Check if today's quiz is completed
+  // 5. Quiz blocking logic for authenticated users
   if (user && !isPublicRoute) {
-    // Routes that are part of the quiz flow - allow access even without quiz
-    const quizFlowRoutes = ['/quiz', '/consultation', '/journal']
-    const isQuizFlowRoute = quizFlowRoutes.some((route) => pathname.startsWith(route))
+    // Check if user is admin - admins skip quiz blocking
+    const { data: userData } = await supabase
+      .from('app_users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
 
-    // If not in quiz flow, check if today's quiz is completed
-    if (!isQuizFlowRoute) {
-      const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+    const isAdmin = userData?.role === 'admin'
 
-      const { data: todayQuiz } = await supabase
-        .from('daily_quiz')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('date', today)
-        .single()
+    // Admins can access all routes without quiz requirement
+    if (isAdmin) {
+      return response
+    }
 
-      // If quiz not completed, redirect to /quiz
-      if (!todayQuiz) {
-        return NextResponse.redirect(new URL('/quiz', request.url))
-      }
+    // Allow access to quiz flow routes (quiz, consultation, journal)
+    if (isQuizFlowRoute) {
+      return response
+    }
+
+    // For all other protected routes, check if today's quiz is completed
+    const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+
+    const { data: todayQuiz } = await supabase
+      .from('daily_quiz')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('date', today)
+      .single()
+
+    // If quiz not completed, redirect to /quiz
+    if (!todayQuiz) {
+      return NextResponse.redirect(new URL('/quiz', request.url))
     }
   }
 
