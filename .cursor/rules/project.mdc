@@ -44,6 +44,8 @@ alwaysApply: true
 - After quiz submit:
   - ringan/sedang → redirect /journal
   - berat → redirect /consultation
+- Always use the Zung Self Anxiety Rating Scale defined in /docs/QUIZ_ZUNG.md for quiz logic, scoring, and category mapping. Reverse scoring is mandatory for questions 5, 9, 13, 17, 19.
+
 
 # --- JOURNALING ---
 - Require journal after quiz except when quiz = berat.
