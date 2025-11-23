@@ -56,8 +56,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/quiz', request.url))
   }
 
-  // TODO: Add quiz blocking logic here (check if today's quiz is completed)
-  // For now, authenticated users can access all routes
+  // Quiz blocking logic: Check if today's quiz is completed
+  if (user && !isPublicRoute) {
+    // Routes that are part of the quiz flow - allow access even without quiz
+    const quizFlowRoutes = ['/quiz', '/consultation', '/journal']
+    const isQuizFlowRoute = quizFlowRoutes.some((route) => pathname.startsWith(route))
+
+    // If not in quiz flow, check if today's quiz is completed
+    if (!isQuizFlowRoute) {
+      const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+
+      const { data: todayQuiz } = await supabase
+        .from('daily_quiz')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('date', today)
+        .single()
+
+      // If quiz not completed, redirect to /quiz
+      if (!todayQuiz) {
+        return NextResponse.redirect(new URL('/quiz', request.url))
+      }
+    }
+  }
 
   return response
 }

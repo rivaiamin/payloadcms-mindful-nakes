@@ -12,24 +12,25 @@
 - [x] Set up Supabase Auth (email/password)
 
 #### 2. **Database Schema Setup**
-- [ ] Create `users` table in Supabase (extend auth.users or create public.users)
-- [ ] Create `daily_quiz` table
-- [ ] Create `journal` table
-- [ ] Set up Row Level Security (RLS) policies
-- [ ] Create database indexes for performance
+- [x] Create `users` table in Supabase (extend auth.users or create public.users) - Created as `app_users` in migration
+- [x] Create `daily_quiz` table
+- [x] Create `journal` table
+- [x] Set up Row Level Security (RLS) policies
+- [x] Create database indexes for performance
+- **Note:** Migration file exists at `docs/migrations/001_initial_schema.sql` - needs to be run in Supabase SQL Editor
 
 #### 3. **PayloadCMS Collections Setup**
-- [ ] Create `Articles` collection
-- [ ] Create `Videos` collection
-- [ ] Create `Audio` collection
-- [ ] Configure fields: title, content, media, tags, recommended_state
+- [x] Create `Articles` collection
+- [x] Create `Videos` collection
+- [x] Create `Audio` collection
+- [x] Configure fields: title, content, media, tags, recommended_state
 
 #### 4. **Project Structure Setup**
-- [ ] Create `/lib/supabase` for Supabase client utilities
-- [ ] Create `/lib/db` for database queries/helpers
-- [ ] Create `/app/api` structure for server actions
-- [ ] Set up middleware for quiz blocking logic
-- [ ] Create TypeScript types for database schemas
+- [x] Create `/lib/supabase` for Supabase client utilities
+- [x] Create `/lib/db` for database queries/helpers
+- [x] Create `/app/api` structure for server actions
+- [x] Set up middleware for quiz blocking logic
+- [x] Create TypeScript types for database schemas
 
 ---
 
