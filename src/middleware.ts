@@ -33,8 +33,31 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // TODO: Add quiz blocking logic here
-  // TODO: Add route protection logic here
+  const { pathname } = request.nextUrl
+
+  // Exclude PayloadCMS admin routes and API routes from auth checks
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api')) {
+    return response
+  }
+
+  // Public routes that don't require authentication
+  const publicRoutes = ['/login', '/register']
+  const isPublicRoute = publicRoutes.includes(pathname)
+
+  // If user is not authenticated and trying to access protected route
+  if (!user && !isPublicRoute) {
+    const redirectUrl = new URL('/login', request.url)
+    redirectUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  // If user is authenticated and trying to access auth pages, redirect to quiz
+  if (user && isPublicRoute) {
+    return NextResponse.redirect(new URL('/quiz', request.url))
+  }
+
+  // TODO: Add quiz blocking logic here (check if today's quiz is completed)
+  // For now, authenticated users can access all routes
 
   return response
 }

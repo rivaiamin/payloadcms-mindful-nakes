@@ -30,15 +30,18 @@ PAYLOAD_SECRET=your_payload_secret
 
 ## Step 4: Set Up Database Schema
 
-1. Open Supabase SQL Editor
-2. Copy SQL from `docs/DATABASE_SCHEMA.md`
-3. Run all SQL scripts in order:
-   - Create `users` table
-   - Create `daily_quiz` table
-   - Create `journal` table
-   - Create indexes
-   - Create RLS policies
-   - Create triggers
+1. Open Supabase SQL Editor (in your Supabase dashboard)
+2. Open the migration file: `docs/migrations/001_initial_schema.sql`
+3. Copy the entire SQL content
+4. Paste it into the SQL Editor
+5. Click **Run** (or press `Ctrl+Enter` / `Cmd+Enter`)
+
+**Important**: This creates all tables, indexes, RLS policies, and triggers in one go.
+
+**Verification**: After running, check the Table Editor in Supabase to see:
+- `users` table
+- `daily_quiz` table  
+- `journal` table
 
 ## Step 5: Create Supabase Client Utilities
 
@@ -233,7 +236,7 @@ pnpm add chart.js react-chartjs-2
 - [x] RLS policies active
 - [x] Supabase client utilities created
 - [x] Middleware file created
-- [ ] Can connect to Supabase (test route works)
+- [x] Can connect to Supabase (test route works)
 - [x] TypeScript types defined
 
 ## Next Steps

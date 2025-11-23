@@ -2,44 +2,46 @@
 
 ## Supabase Tables
 
-### 1. `users` (extends auth.users or separate table)
+### 1. `app_users` (extends auth.users or separate table)
+
+**Note:** Renamed from `users` to `app_users` to avoid conflict with PayloadCMS `users` table.
 
 ```sql
-CREATE TABLE public.users (
+CREATE TABLE public.app_users (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
-  role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  "role" TEXT DEFAULT 'user' CHECK ("role" IN ('user', 'admin')),
   last_quiz_date DATE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Indexes
-CREATE INDEX idx_users_email ON public.users(email);
-CREATE INDEX idx_users_role ON public.users(role);
-CREATE INDEX idx_users_last_quiz_date ON public.users(last_quiz_date);
+CREATE INDEX idx_app_users_email ON public.app_users(email);
+CREATE INDEX idx_app_users_role ON public.app_users("role");
+CREATE INDEX idx_app_users_last_quiz_date ON public.app_users(last_quiz_date);
 
 -- RLS Policies
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_users ENABLE ROW LEVEL SECURITY;
 
 -- Users can read their own data
-CREATE POLICY "Users can read own data"
-  ON public.users FOR SELECT
+CREATE POLICY "App users can read own data"
+  ON public.app_users FOR SELECT
   USING (auth.uid() = id);
 
 -- Users can update their own data
-CREATE POLICY "Users can update own data"
-  ON public.users FOR UPDATE
+CREATE POLICY "App users can update own data"
+  ON public.app_users FOR UPDATE
   USING (auth.uid() = id);
 
 -- Admins can read all users
-CREATE POLICY "Admins can read all users"
-  ON public.users FOR SELECT
+CREATE POLICY "Admins can read all app users"
+  ON public.app_users FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
+      SELECT 1 FROM public.app_users
+      WHERE id = auth.uid() AND "role" = 'admin'
     )
   );
 ```
@@ -49,7 +51,7 @@ CREATE POLICY "Admins can read all users"
 ```sql
 CREATE TABLE public.daily_quiz (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.app_users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   answers JSONB NOT NULL, -- Array of answers: [1, 2, 3, 4, 5, ...]
   score INTEGER NOT NULL,
@@ -84,8 +86,8 @@ CREATE POLICY "Admins can read all quizzes"
   ON public.daily_quiz FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
+      SELECT 1 FROM public.app_users
+      WHERE id = auth.uid() AND "role" = 'admin'
     )
   );
 ```
@@ -95,7 +97,7 @@ CREATE POLICY "Admins can read all quizzes"
 ```sql
 CREATE TABLE public.journal (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.app_users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   title TEXT,
   content TEXT NOT NULL,
@@ -137,8 +139,8 @@ CREATE POLICY "Admins can read all journals"
   ON public.journal FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM public.users
-      WHERE id = auth.uid() AND role = 'admin'
+      SELECT 1 FROM public.app_users
+      WHERE id = auth.uid() AND "role" = 'admin'
     )
   );
 ```
@@ -151,7 +153,7 @@ CREATE POLICY "Admins can read all journals"
 CREATE OR REPLACE FUNCTION update_user_last_quiz_date()
 RETURNS TRIGGER AS $$
 BEGIN
-  UPDATE public.users
+  UPDATE public.app_users
   SET last_quiz_date = NEW.date
   WHERE id = NEW.user_id;
   RETURN NEW;
@@ -175,8 +177,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_update_users_updated_at
-  BEFORE UPDATE ON public.users
+CREATE TRIGGER trigger_update_app_users_updated_at
+  BEFORE UPDATE ON public.app_users
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
