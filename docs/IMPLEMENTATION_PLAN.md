@@ -54,6 +54,8 @@
 ### 1.3 Middleware & Routing
 - [x] Create `middleware.ts` with quiz blocking logic
 - [x] Set up protected routes
+- [ ] **Update middleware for 24-hour validity check** (instead of daily check)
+- [ ] Implement logic: if quiz completed within 24 hours → allow homepage access
 - [x] Implement redirect logic (quiz → journal/consultation)
 
 ---
@@ -61,25 +63,31 @@
 ## Phase 2: Daily Quiz Feature (Week 2)
 
 ### 2.1 Quiz Data & Logic
-- [ ] Create static quiz questions JSON (10 questions)
-- [ ] Create quiz scoring logic (sum calculation)
-- [ ] Create category mapping (0-13: ringan, 14-20: sedang, 21+: berat)
+- [ ] **Update quiz questions JSON to PSS-10 format** (10 questions, confirm exact questions with client)
+- [ ] Create quiz scoring logic (sum calculation, range 0-40)
+- [ ] **Update category mapping** (0-13: rendah, 14-26: sedang, 27-40: berat)
 - [ ] Create TypeScript types for quiz
+- [ ] **Implement 24-hour validity check logic** (check `created_at` timestamp)
 
 ### 2.2 Quiz UI
 - [ ] Create `/app/quiz` page
-- [ ] Build quiz form component (Likert 1-5 scale)
-- [ ] Implement form validation
-- [ ] Add progress indicator
+- [ ] Build quiz form component (Likert 1-5 scale for PSS-10)
+- [ ] Implement form validation (10 questions required)
+- [ ] Add progress indicator (1/10, 2/10, etc.)
 - [ ] Handle quiz submission
+- [ ] **Create quiz result display component** (shows score, category, recommendations)
 
 ### 2.3 Quiz Result Flow
 - [ ] Create result calculation server action
-- [ ] Save quiz to database
+- [ ] Save quiz to database with `created_at` timestamp (for 24-hour validity)
+- [ ] **Implement recommendations display based on score:**
+  - Rendah (0-13): Deep Breathing, Read Tips
+  - Sedang (14-26): Mindfulness, Read Tips, Consider Consultation
+  - Berat (27-40): Mindfulness, Read Tips, Professional Help Warning + Links
 - [ ] Implement redirect logic:
-  - Ringan/Sedang → `/journal`
+  - Rendah/Sedang → `/journal`
   - Berat → `/consultation`
-- [ ] Create `/app/consultation` page (recommendation message)
+- [ ] Create `/app/consultation` page (recommendation message with Halodoc/Alodokter links)
 
 ---
 
@@ -98,21 +106,37 @@
 
 ---
 
-## Phase 4: Profile & Progress Tracking (Week 3)
+## Phase 4: Homepage & Progress Tracking (Week 3)
 
-### 4.1 Profile Page
-- [ ] Create `/app/profile` page
-- [ ] Display user information
-- [ ] Add logout functionality
+### 4.1 Homepage (Beranda)
+- [ ] Create `/app` or `/app/home` page (homepage)
+- [ ] Display last assessment score result prominently
+- [ ] Show user's current stress category status
+- [ ] Create navigation hub to all features
+- [ ] Add quick access to main features (Mindfulness, Journal, Progress, Profile)
 
-### 4.2 Stress Progress Graph
+### 4.2 Check Progress (Cek Progres)
+- [ ] Create `/app/progress` page (separate from profile)
 - [ ] Install charting library (Recharts or Chart.js)
-- [ ] Create graph component
+- [ ] Create graph component for daily statistics
 - [ ] Fetch quiz history from Supabase
-- [ ] Plot: X = days, Y = score/category
+- [ ] Plot: X = dates, Y = score/category
+- [ ] Display daily stress statistics per date
 - [ ] Add date range filter (optional)
 
-### 4.3 History Sections
+### 4.3 Profile Page
+- [ ] Create `/app/profile` page
+- [ ] **Personal Data Section:**
+  - Display full name (editable)
+  - Edit profile photo functionality
+  - Display/edit phone number
+- [ ] **Account Settings Section:**
+  - Change password functionality
+  - Change email functionality
+- [ ] Add logout functionality
+- [ ] (Optional) History sections (quiz/journal history)
+
+### 4.4 History Sections (Optional - can be in profile or separate)
 - [ ] Create quiz history list component
 - [ ] Create journal history list component
 - [ ] Add pagination if needed
@@ -120,25 +144,49 @@
 
 ---
 
-## Phase 5: Mindfulness Content (Week 4)
+## Phase 5: Mindfulness Features (Week 4)
 
 ### 5.1 PayloadCMS Content Collections
 - [ ] Finalize Articles, Videos, Audio collections
+- [ ] **Add specific content types:**
+  - Short Meditation (Meditasi Singkat) + Video
+  - Deep Breathing Relaxation (Relaksasi Nafas Dalam) + Video
+  - Positive Affirmation (Afirmasi Positif) + Video
+  - Mental Health Tips and Education articles
 - [ ] Seed initial content (optional)
 - [ ] Test content creation in PayloadCMS admin
 
-### 5.2 Mindfulness Page
-- [ ] Create `/app/mindfulness` page
+### 5.2 Mindfulness Main Page
+- [ ] Create `/app/mindfulness` page (main hub)
+- [ ] Create navigation to three core features:
+  - Short Meditation
+  - Deep Breathing Relaxation
+  - Positive Affirmation
+- [ ] Create link to Tips and Education section
 - [ ] Fetch content from PayloadCMS API
 - [ ] Implement filtering by:
   - User's current stress category
   - Tags
-- [ ] Create content cards/components
-- [ ] Add content detail view
 
-### 5.3 Content Display
+### 5.3 Mindfulness Feature Pages
+- [ ] Create `/app/mindfulness/meditation` page
+- [ ] Create `/app/mindfulness/breathing` page
+- [ ] Create `/app/mindfulness/affirmation` page
+- [ ] Each page should have:
+  - Content/audio player
+  - Video player component
+  - Related content suggestions
+
+### 5.4 Tips and Education
+- [ ] Create `/app/mindfulness/tips` or `/app/education` page
+- [ ] Display articles on "How to Overcome Stress"
 - [ ] Article viewer component
-- [ ] Video player component
+- [ ] Filter by stress category
+- [ ] Add loading states
+
+### 5.5 Content Display Components
+- [ ] Article viewer component
+- [ ] Video player component (for meditation, breathing, affirmation videos)
 - [ ] Audio player component
 - [ ] Add loading states
 
@@ -206,20 +254,30 @@
 
 ### Before Starting:
 1. **Database Strategy**:
-   - Use Supabase auth.users + extend with public.users table?
-   - Or create separate users table and sync with auth?
+   - ✅ Use Supabase auth.users + extend with public.app_users table (already decided)
 
 2. **Quiz Questions**:
-   - What are the actual 10 questions? (Need content)
+   - ⚠️ **URGENT:** Confirm exact PSS-10 questions in Indonesian with client
+   - Confirm reverse scoring logic (if any)
+   - Confirm scoring calculation (how to get 0-40 range from 1-5 scale)
 
-3. **Idle Timeout**:
+3. **24-Hour Validity**:
+   - ✅ Use `created_at` timestamp from `daily_quiz` table
+   - Check: `created_at > NOW() - INTERVAL '24 hours'`
+
+4. **Idle Timeout**:
    - How long before auto-logout? (PRD says "configurable")
 
-4. **Chart Library**:
+5. **Chart Library**:
    - Recharts or Chart.js? (Recommend Recharts for React)
 
-5. **Date Handling**:
-   - Timezone considerations? (Indonesia timezone?)
+6. **Date Handling**:
+   - Timezone considerations? (Indonesia timezone - WIB/WITA/WIT?)
+   - Use `TIMESTAMPTZ` for proper timezone handling
+
+7. **Profile Photo Storage**:
+   - Store in Supabase Storage or external service?
+   - Update `profile_photo_url` in `app_users` table
 
 ---
 
@@ -232,11 +290,17 @@ src/
 │   │   ├── login/
 │   │   └── register/
 │   ├── (protected)/
+│   │   ├── page.tsx (Homepage/Beranda - shows last assessment score)
 │   │   ├── quiz/
 │   │   ├── journal/
 │   │   ├── consultation/
+│   │   ├── progress/ (Check Progress/Cek Progres)
 │   │   ├── profile/
 │   │   ├── mindfulness/
+│   │   │   ├── meditation/
+│   │   │   ├── breathing/
+│   │   │   ├── affirmation/
+│   │   │   └── tips/ (or education/)
 │   │   └── admin/
 │   ├── api/
 │   │   └── [server actions]

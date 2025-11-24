@@ -11,8 +11,11 @@ CREATE TABLE public.app_users (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
+  phone_number TEXT,
+  profile_photo_url TEXT,
   "role" TEXT DEFAULT 'user' CHECK ("role" IN ('user', 'admin')),
   last_quiz_date DATE,
+  last_quiz_timestamp TIMESTAMPTZ, -- For 24-hour validity check
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -53,10 +56,10 @@ CREATE TABLE public.daily_quiz (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.app_users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
-  answers JSONB NOT NULL, -- Array of answers: [1, 2, 3, 4, 5, ...]
-  score INTEGER NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('ringan', 'sedang', 'berat')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
+  answers JSONB NOT NULL, -- Array of 10 answers: [0, 1, 2, 3, 4, ...] (PSS-10, 0-4 scale, reverse scoring for questions 4, 5, 7, 8)
+  score INTEGER NOT NULL CHECK (score >= 0 AND score <= 40), -- PSS-10 score range
+  category TEXT NOT NULL CHECK (category IN ('rendah', 'sedang', 'berat')), -- Updated categories
+  created_at TIMESTAMPTZ DEFAULT NOW(), -- Critical for 24-hour validity check
 
   -- Ensure one quiz per user per day
   UNIQUE(user_id, date)
@@ -154,7 +157,8 @@ CREATE OR REPLACE FUNCTION update_user_last_quiz_date()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE public.app_users
-  SET last_quiz_date = NEW.date
+  SET last_quiz_date = NEW.date,
+      last_quiz_timestamp = NEW.created_at -- Store timestamp for 24-hour validity check
   WHERE id = NEW.user_id;
   RETURN NEW;
 END;
@@ -197,8 +201,11 @@ export type User = {
   id: string;
   email: string;
   name: string | null;
+  phone_number: string | null;
+  profile_photo_url: string | null;
   role: 'user' | 'admin';
   last_quiz_date: string | null;
+  last_quiz_timestamp: string | null; // For 24-hour validity check
   created_at: string;
   updated_at: string;
 };
@@ -207,10 +214,10 @@ export type DailyQuiz = {
   id: string;
   user_id: string;
   date: string;
-  answers: number[]; // Array of 10 numbers (1-5)
-  score: number;
-  category: 'ringan' | 'sedang' | 'berat';
-  created_at: string;
+  answers: number[]; // Array of 10 numbers (0-4) for PSS-10, with reverse scoring for questions 4, 5, 7, 8
+  score: number; // Range: 0-40
+  category: 'rendah' | 'sedang' | 'berat'; // Updated categories
+  created_at: string; // Critical for 24-hour validity check
 };
 
 export type Journal = {
@@ -225,10 +232,23 @@ export type Journal = {
 };
 ```
 
+## Helper Query: Check 24-Hour Quiz Validity
+
+```sql
+-- Check if user has valid quiz within last 24 hours
+SELECT * FROM public.daily_quiz
+WHERE user_id = $1
+  AND created_at > NOW() - INTERVAL '24 hours'
+ORDER BY created_at DESC
+LIMIT 1;
+```
+
 ## Migration Notes
 
 1. Run these SQL scripts in Supabase SQL Editor
 2. Test RLS policies with different user roles
 3. Verify indexes are created
 4. Test triggers work correctly
+5. **Important:** The `created_at` timestamp in `daily_quiz` is critical for 24-hour validity checks
+6. Update existing `category` values from 'ringan' to 'rendah' if migrating from old schema
 

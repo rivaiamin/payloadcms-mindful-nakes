@@ -1,36 +1,52 @@
 [
-  { "id": 1, "text": "Saya merasa lebih gelisah dan cemas dari biasanya" },
-  { "id": 2, "text": "Saya merasa takut tanpa alasan yang jelas" },
-  { "id": 3, "text": "Saya merasa panik" },
+  {
+    "id": 1,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa kecewa/gundah/terganggu karena sesuatu hal yang terjadi di luar harapan/dugaan Anda?",
+    "reverse": false
+  },
+  {
+    "id": 2,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa tidak mampu untuk mengontrol hal-hal penting dalam hidup Anda? (contoh: pekerjaan, sekolah, keluarga, ibadah)",
+    "reverse": false
+  },
+  {
+    "id": 3,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa gelisah dan stres?",
+    "reverse": false
+  },
   {
     "id": 4,
-    "text": "Saya merasa tubuh saya seperti hancur berantakan dan akan hancur berkeping-keping"
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa percaya diri bahwa Anda mampu untuk menyelesaikan masalah pribadi Anda?",
+    "reverse": true
   },
   {
     "id": 5,
-    "text": "Saya merasa semua baik-baik saja dan tidak akan ada hal buruk yang terjadi",
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa bahwa segala sesuatunya berjalan sesuai keinginan Anda?",
     "reverse": true
   },
-  { "id": 6, "text": "Kedua tangan dan kaki saya gemetar" },
-  { "id": 7, "text": "Saya sering terganggu oleh sakit kepala, leher, dan punggung" },
-  { "id": 8, "text": "Saya merasa badan saya lemah dan mudah lelah" },
-  { "id": 9, "text": "Saya merasa tenang dan dapat duduk dengan nyaman", "reverse": true },
-  { "id": 10, "text": "Saya merasa jantung saya berdebar-debar dengan keras dan cepat" },
-  { "id": 11, "text": "Saya sering mengalami pusing" },
-  { "id": 12, "text": "Saya sering pingsan atau merasa seperti ingin pingsan" },
-  { "id": 13, "text": "Saya dapat bernafas dengan mudah seperti biasanya", "reverse": true },
   {
-    "id": 14,
-    "text": "Saya merasa kaku atau mati rasa dan kesemutan pada jari-jari dan kaki saya"
+    "id": 6,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda menyadari bahwa Anda tidak dapat menyelesaikan semua hal yang harus Anda lakukan?",
+    "reverse": false
   },
-  { "id": 15, "text": "Saya merasa sakit perut atau gangguan pencernaan" },
-  { "id": 16, "text": "Saya merasa sering kencing daripada biasanya" },
-  { "id": 17, "text": "Tangan saya hangat dan kering seperti biasanya", "reverse": true },
-  { "id": 18, "text": "Wajah saya terasa panas dan kemerahan" },
   {
-    "id": 19,
-    "text": "Tadi malam saya dapat tidur dan beristirahat pada malam hari dengan tenang",
+    "id": 7,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda dapat mengontrol perasaan jengkel atau tidak nyaman yang mengganggu dalam hidup Anda?",
     "reverse": true
   },
-  { "id": 20, "text": "Saya mengalami mimpi-mimpi buruk" }
+  {
+    "id": 8,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa bahwa Anda berada dalam situasi yang nyaman?",
+    "reverse": true
+  },
+  {
+    "id": 9,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda marah karena sesuatu hal yang terjadi di luar kendali Anda?",
+    "reverse": false
+  },
+  {
+    "id": 10,
+    "text": "Dalam sebulan terakhir, seberapa sering Anda merasa segala kesulitan atau masalah menumpuk begitu tinggi sehingga Anda merasa tidak mampu mengatasinya?",
+    "reverse": false
+  }
 ]

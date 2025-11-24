@@ -33,24 +33,39 @@
 
 ---
 
-### **2.2 Daily Stress Quiz**
+### **2.2 Daily Stress Quiz (PSS-10)**
 
-* 10 questions (Likert 1–5).
-* Score is sum or weighted sum → mapped to levels:
-
-  * 0–13 → Ringan
-  * 14–20 → Sedang
-  * 21+ → Berat
-* Blocking rule:
-
-  * If quiz for today not completed → redirect to /quiz (block all other routes).
+* **Quiz Type:** Perceived Stress Scale (PSS-10) - 10 questions
+* **Answer Scale:** Likert 0–4 (5 options: Tidak Pernah, Hampir Tidak Pernah, Kadang-Kadang, Cukup Sering, Sangat Sering)
+* **Score Calculation:** Sum of all answers
+* **Score Categories:**
+  * 0–13 → Rendah (Low)
+  * 14–26 → Sedang (Medium)
+  * 27–40 → Berat (High)
+* **24-Hour Validity Rule:**
+  * Quiz is valid for 1x24 hours (24 hours from completion)
+  * If user completed quiz within the last 24 hours → redirect to homepage (skip quiz)
+  * If quiz not completed or expired → redirect to /quiz (block all other routes)
 
 ---
 
-### **2.3 Quiz Result Flow**
+### **2.3 Quiz Result Flow & Recommendations**
 
-* If **Ringan/Sedang** → Redirect to /journal (user writes journal).
-* If **Berat** → Redirect to /consultation (show recommendation to seek help).
+After quiz completion, user sees assessment score result and recommendations:
+
+* **Rendah (Score 0-13):**
+  * Recommendations: Deep Breathing Relaxation, Read Mental Health Tips and Education
+  * Redirect to /journal
+
+* **Sedang (Score 14-26):**
+  * Recommendations: Mindfulness (Meditation, Deep Breathing, Positive Affirmation), Read Mental Health Tips and Education, Consider Consulting a Professional
+  * Redirect to /journal
+
+* **Berat (Score 27-40):**
+  * Recommendations: Mindfulness (Meditation, Deep Breathing, Positive Affirmation), Read Mental Health Tips and Education
+  * **Warning:** If severe symptoms appear (severe sleep disorder, feeling unable to control oneself) → immediately seek professional help
+  * Links to Halodoc or Alodokter for professional consultation
+  * Redirect to /consultation
 
 ---
 
@@ -65,31 +80,79 @@
 
 ---
 
-### **2.5 Profile Page**
+### **2.5 Homepage (Beranda)**
+
+* Displays last assessment score result prominently
+* Main navigation hub to access all features
+* Shows user's current stress category status
+
+---
+
+### **2.6 Check Progress (Cek Progres)**
+
+* Separate feature/page for viewing progress statistics
+* Displays daily stress statistics per date
+* Shows trend over time (daily/date-based)
+* Data visualization: charts/graphs showing stress score progression
+* X-axis: dates
+* Y-axis: score/category
+
+---
+
+### **2.7 Profile Page**
 
 Contains:
 
-#### **Graph: Stress Progress**
+#### **Personal Data (Data Diri Pengguna)**
+* Full Name (Nama Lengkap)
+* Edit Profile Photo
+* Phone Number (No Telepon)
 
-* X = days
-* Y = score/category
-* Data pulled from Supabase daily_quiz table.
+#### **Account Settings (Pengaturan Akun)**
+* Change Password (Ganti Password)
+* Change Email (Ganti Email)
 
-#### **History**
+#### **Logout**
+* Log out functionality
 
+#### **History** (Optional - can be in separate section)
 * Quiz history
 * Journal history
 
 ---
 
-### **2.6 Mindfulness Page**
+### **2.8 Mindfulness Features**
 
-* Content types: article, audio, video
-* Filtered by:
+Main mindfulness section with three core features:
 
-  * user stress category
-  * admin-defined tags
-* Content stored in PayloadCMS.
+#### **2.8.1 Short Meditation (Meditasi Singkat)**
+* Meditation content/audio
+* **Video:** Short Meditation Video (Vidio Meditasi Singkat)
+
+#### **2.8.2 Deep Breathing Relaxation (Relaksasi Nafas Dalam)**
+* Breathing exercise content/audio
+* **Video:** Deep Breathing Relaxation Video (Vidio Relaksasi Nafas Dalam)
+
+#### **2.8.3 Positive Affirmation (Afirmasi Positif)**
+* Positive affirmation content/audio
+* **Video:** Positive Affirmation Video (Vidio Afirmasi Positif)
+
+#### **2.8.4 Tips and Mental Health Education (Tips Dan Edukasi Mental Health)**
+* Articles on how to overcome stress (Artikel Artikel Cara Mengatasi Stres)
+* Educational content about mental health
+* Content stored in PayloadCMS
+* Filtered by user stress category and admin-defined tags
+
+---
+
+### **2.9 Daily Journal (Jurnal Harian)**
+
+* User/Nurse notes (Catatan Pengguna / Perawat)
+* Fields:
+  * title: string | optional
+  * content: text
+  * mood: integer (1–5)
+* Journaling required after quiz (except when quiz result = berat, which redirects to consultation)
 
 ---
 
@@ -130,13 +193,16 @@ Collections:
 
 ## **4. Database Schema (Supabase)**
 
-### **users**
+### **users** (app_users)
 
 id (uuid)
 email
 name
+phone_number (text, optional)
+profile_photo_url (text, optional)
 role (user | admin)
 last_quiz_date
+last_quiz_timestamp (timestamptz, for 24-hour validity check)
 created_at
 
 ### **daily_quiz**
@@ -144,10 +210,10 @@ created_at
 id
 user_id
 date
-answers (json)
-score (int)
-category (ringan | sedang | berat)
-created_at
+answers (json) - Array of 10 answers (0-4 scale, with reverse scoring for questions 4, 5, 7, 8)
+score (int) - Range: 0-40
+category (rendah | sedang | berat) - Based on score ranges: 0-13, 14-26, 27-40
+created_at (timestamptz) - Used for 24-hour validity check
 
 ### **journal**
 
@@ -169,7 +235,9 @@ PayloadCMS will manage its own collections; Supabase is only for user activity +
 * Supabase client for DB + Auth.
 * Next Middleware:
 
-  * Redirect user to /quiz if today’s quiz not completed.
+  * Check if user has completed quiz within last 24 hours
+  * If quiz completed within 24 hours → allow access to homepage
+  * If quiz not completed or expired → redirect to /quiz (block all other routes)
 * PayloadCMS deployed separately but can be on Vercel.
 * TailwindCSS for UI.
 * Charts built using Recharts or Chart.js.
