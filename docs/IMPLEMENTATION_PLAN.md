@@ -63,31 +63,31 @@
 ## Phase 2: Daily Quiz Feature (Week 2)
 
 ### 2.1 Quiz Data & Logic
-- [ ] **Update quiz questions JSON to PSS-10 format** (10 questions, confirm exact questions with client)
-- [ ] Create quiz scoring logic (sum calculation, range 0-40)
-- [ ] **Update category mapping** (0-13: rendah, 14-26: sedang, 27-40: berat)
-- [ ] Create TypeScript types for quiz
-- [ ] **Implement 24-hour validity check logic** (check `created_at` timestamp)
+- [x] **Update quiz questions JSON to PSS-10 format** (10 questions, confirmed with PSS-10 standard)
+- [x] Create quiz scoring logic (sum calculation with reverse scoring, range 0-40)
+- [x] **Update category mapping** (0-13: rendah, 14-26: sedang, 27-40: berat)
+- [x] Create TypeScript types for quiz
+- [x] **Implement 24-hour validity check logic** (check `created_at` timestamp in middleware)
 
 ### 2.2 Quiz UI
-- [ ] Create `/app/quiz` page
-- [ ] Build quiz form component (Likert 1-5 scale for PSS-10)
-- [ ] Implement form validation (10 questions required)
-- [ ] Add progress indicator (1/10, 2/10, etc.)
-- [ ] Handle quiz submission
-- [ ] **Create quiz result display component** (shows score, category, recommendations)
+- [x] Create `/app/quiz` page (with authentication check)
+- [x] Build quiz form component (Likert 0-4 scale for PSS-10)
+- [x] Implement form validation (10 questions required)
+- [x] Add progress indicator (1/10, 2/10, etc. with percentage bar)
+- [x] Handle quiz submission (server action with validation)
+- [x] **Create quiz result display component** (shows score, category, recommendations)
 
 ### 2.3 Quiz Result Flow
-- [ ] Create result calculation server action
-- [ ] Save quiz to database with `created_at` timestamp (for 24-hour validity)
-- [ ] **Implement recommendations display based on score:**
+- [x] Create result calculation server action (with reverse scoring for questions 4, 5, 7, 8)
+- [x] Save quiz to database with `created_at` timestamp (for 24-hour validity)
+- [x] **Implement recommendations display based on score:**
   - Rendah (0-13): Deep Breathing, Read Tips
   - Sedang (14-26): Mindfulness, Read Tips, Consider Consultation
   - Berat (27-40): Mindfulness, Read Tips, Professional Help Warning + Links
-- [ ] Implement redirect logic:
+- [x] Implement redirect logic:
   - Rendah/Sedang → `/journal`
   - Berat → `/consultation`
-- [ ] Create `/app/consultation` page (recommendation message with Halodoc/Alodokter links)
+- [x] Create `/app/consultation` page (recommendation message with Halodoc/Alodokter links)
 
 ---
 
