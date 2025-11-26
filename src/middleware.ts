@@ -8,7 +8,7 @@ import { NextResponse, type NextRequest } from 'next/server'
  * 1. Exclude PayloadCMS admin and API routes
  * 2. Redirect unauthenticated users to login (except public routes)
  * 3. Redirect authenticated users away from auth pages
- * 4. Block access to protected routes if today's quiz is not completed
+ * 4. Block access to protected routes if quiz not completed within last 24 hours
  * 5. Admins skip quiz blocking
  */
 export async function middleware(request: NextRequest) {
@@ -91,18 +91,18 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
-    // For all other protected routes, check if today's quiz is completed
-    const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
-
-    const { data: todayQuiz } = await supabase
+    // For all other protected routes, check if quiz completed within last 24 hours
+    const { data: validQuiz } = await supabase
       .from('daily_quiz')
-      .select('id')
+      .select('id, created_at')
       .eq('user_id', user.id)
-      .eq('date', today)
-      .single()
+      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // 24 hours ago
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-    // If quiz not completed, redirect to /quiz
-    if (!todayQuiz) {
+    // If no valid quiz within 24 hours, redirect to /quiz
+    if (!validQuiz) {
       return NextResponse.redirect(new URL('/quiz', request.url))
     }
   }

@@ -94,49 +94,40 @@ export async function createClient() {
 
 ## Step 6: Create Quiz Questions Data
 
-Create `src/data/quiz-questions.json` with all 20 Zung Self Anxiety Rating Scale questions:
+Create `src/data/quiz-questions.json` with all 10 PSS-10 (Perceived Stress Scale) questions:
 
 ```json
 [
-  { "id": 1, "text": "Saya merasa lebih gelisah dan cemas dari biasanya" },
-  { "id": 2, "text": "Saya merasa takut tanpa alasan yang jelas" },
-  { "id": 3, "text": "Saya merasa panik" },
-  { "id": 4, "text": "Saya merasa tubuh saya seperti hancur berantakan dan akan hancur berkeping-keping" },
-  { "id": 5, "text": "Saya merasa semua baik-baik saja dan tidak akan ada hal buruk yang terjadi", "reverse": true },
-  { "id": 6, "text": "Kedua tangan dan kaki saya gemetar" },
-  { "id": 7, "text": "Saya sering terganggu oleh sakit kepala, leher, dan punggung" },
-  { "id": 8, "text": "Saya merasa badan saya lemah dan mudah lelah" },
-  { "id": 9, "text": "Saya merasa tenang dan dapat duduk dengan nyaman", "reverse": true },
-  { "id": 10, "text": "Saya merasa jantung saya berdebar-debar dengan keras dan cepat" },
-  { "id": 11, "text": "Saya sering mengalami pusing" },
-  { "id": 12, "text": "Saya sering pingsan atau merasa seperti ingin pingsan" },
-  { "id": 13, "text": "Saya dapat bernafas dengan mudah seperti biasanya", "reverse": true },
-  { "id": 14, "text": "Saya merasa kaku atau mati rasa dan kesemutan pada jari-jari dan kaki saya" },
-  { "id": 15, "text": "Saya merasa sakit perut atau gangguan pencernaan" },
-  { "id": 16, "text": "Saya merasa sering kencing daripada biasanya" },
-  { "id": 17, "text": "Tangan saya hangat dan kering seperti biasanya", "reverse": true },
-  { "id": 18, "text": "Wajah saya terasa panas dan kemerahan" },
-  { "id": 19, "text": "Tadi malam saya dapat tidur dan beristirahat pada malam hari dengan tenang", "reverse": true },
-  { "id": 20, "text": "Saya mengalami mimpi-mimpi buruk" }
+  { "id": 1, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa kecewa/gundah/terganggu karena sesuatu hal yang terjadi di luar harapan/dugaan Anda?", "reverse": false },
+  { "id": 2, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa tidak mampu untuk mengontrol hal-hal penting dalam hidup Anda? (contoh: pekerjaan, sekolah, keluarga, ibadah)", "reverse": false },
+  { "id": 3, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa gelisah dan stres?", "reverse": false },
+  { "id": 4, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa percaya diri bahwa Anda mampu untuk menyelesaikan masalah pribadi Anda?", "reverse": true },
+  { "id": 5, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa bahwa segala sesuatunya berjalan sesuai keinginan Anda?", "reverse": true },
+  { "id": 6, "text": "Dalam sebulan terakhir, seberapa sering Anda menyadari bahwa Anda tidak dapat menyelesaikan semua hal yang harus Anda lakukan?", "reverse": false },
+  { "id": 7, "text": "Dalam sebulan terakhir, seberapa sering Anda dapat mengontrol perasaan jengkel atau tidak nyaman yang mengganggu dalam hidup Anda?", "reverse": true },
+  { "id": 8, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa bahwa Anda berada dalam situasi yang nyaman?", "reverse": true },
+  { "id": 9, "text": "Dalam sebulan terakhir, seberapa sering Anda marah karena sesuatu hal yang terjadi di luar kendali Anda?", "reverse": false },
+  { "id": 10, "text": "Dalam sebulan terakhir, seberapa sering Anda merasa segala kesulitan atau masalah menumpuk begitu tinggi sehingga Anda merasa tidak mampu mengatasinya?", "reverse": false }
 ]
 ```
 
-**Answer Options (4-point Likert scale):**
-- `1` = "Tidak pernah" (Never)
-- `2` = "Kadang-kadang" (Sometimes)
-- `3` = "Sering" (Often)
-- `4` = "Selalu" (Always)
+**Answer Options (5-point Likert scale, 0-4 values):**
+- `0` = "Tidak Pernah" (Never)
+- `1` = "Hampir Tidak Pernah" (Almost Never)
+- `2` = "Kadang-Kadang" (Sometimes)
+- `3` = "Cukup Sering" (Fairly Often)
+- `4` = "Sangat Sering" (Very Often)
 
-**Note:** Questions with `"reverse": true` (items 5, 9, 13, 17, 19) must be reverse-scored when calculating the total score:
-- 1 → 4, 2 → 3, 3 → 2, 4 → 1
+**Note:** Questions with `"reverse": true` (items 4, 5, 7, 8) must be reverse-scored when calculating the total score:
+- Formula: `score = 4 - answer`
+- Example: 0 → 4, 1 → 3, 2 → 2, 3 → 1, 4 → 0
 
-**Score Categories:**
-- 20–44: "normal"
-- 45–59: "sedang"
-- 60–74: "berat"
-- ≥ 75: "panik"
+**Score Categories (PSS-10):**
+- 0–13: "rendah" (Low)
+- 14–26: "sedang" (Medium)
+- 27–40: "berat" (High)
 
-See `docs/QUIZ_ZUNG.md` for complete scoring logic and business rules.
+See `docs/QUIZ_PSS10.md` for complete scoring logic and business rules.
 
 ## Step 7: Create TypeScript Types
 

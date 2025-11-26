@@ -47,6 +47,30 @@ export async function getQuizByDate(userId: string, date: string) {
 }
 
 /**
+ * Get the most recent quiz within the last 24 hours for a user
+ * @param userId - The user's UUID
+ * @returns DailyQuiz object or null if not found or expired
+ */
+export async function getValidQuizWithin24Hours(userId: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('daily_quiz')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // 24 hours ago
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  if (error || !data) {
+    return null
+  }
+
+  return data as DailyQuiz
+}
+
+/**
  * Create a new quiz entry
  * @param quizData - Quiz data object
  * @returns Object with created quiz data and error if any
@@ -56,7 +80,7 @@ export async function createQuiz(quizData: {
   date: string
   answers: number[]
   score: number
-  category: 'ringan' | 'sedang' | 'berat'
+  category: 'rendah' | 'sedang' | 'berat'
 }) {
   const supabase = await createClient()
   const { data, error } = await supabase.from('daily_quiz').insert(quizData).select().single()
@@ -165,7 +189,7 @@ export async function getTodayQuizStats() {
 
   if (error || !data) {
     return {
-      ringan: 0,
+      rendah: 0,
       sedang: 0,
       berat: 0,
       total: 0,
@@ -173,7 +197,7 @@ export async function getTodayQuizStats() {
   }
 
   const stats = {
-    ringan: data.filter((q) => q.category === 'ringan').length,
+    rendah: data.filter((q) => q.category === 'rendah').length,
     sedang: data.filter((q) => q.category === 'sedang').length,
     berat: data.filter((q) => q.category === 'berat').length,
     total: data.length,
