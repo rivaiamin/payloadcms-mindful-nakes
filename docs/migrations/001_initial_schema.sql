@@ -46,13 +46,11 @@ CREATE POLICY "App users can insert own data"
     auth.uid() IS NOT NULL
   );
 
+-- Admins can read all users (using JWT to avoid infinite recursion)
 CREATE POLICY "Admins can read all app users"
   ON public.app_users FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM public.app_users
-      WHERE id = auth.uid() AND "role" = 'admin'
-    )
+    (auth.jwt() ->> 'role')::text = 'admin'
   );
 
 -- ============================================
@@ -64,7 +62,7 @@ CREATE TABLE IF NOT EXISTS public.daily_quiz (
   date DATE NOT NULL,
   answers JSONB NOT NULL,
   score INTEGER NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('ringan', 'sedang', 'berat')),
+  category TEXT NOT NULL CHECK (category IN ('rendah', 'sedang', 'berat')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, date)
 );
@@ -92,13 +90,11 @@ CREATE POLICY "Users can insert own quizzes"
   ON public.daily_quiz FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+-- Admins can read all quizzes (using JWT to avoid infinite recursion)
 CREATE POLICY "Admins can read all quizzes"
   ON public.daily_quiz FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM public.app_users
-      WHERE id = auth.uid() AND "role" = 'admin'
-    )
+    (auth.jwt() ->> 'role')::text = 'admin'
   );
 
 -- ============================================
@@ -147,13 +143,11 @@ CREATE POLICY "Users can delete own journals"
   ON public.journal FOR DELETE
   USING (auth.uid() = user_id);
 
+-- Admins can read all journals (using JWT to avoid infinite recursion)
 CREATE POLICY "Admins can read all journals"
   ON public.journal FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM public.app_users
-      WHERE id = auth.uid() AND "role" = 'admin'
-    )
+    (auth.jwt() ->> 'role')::text = 'admin'
   );
 
 -- ============================================

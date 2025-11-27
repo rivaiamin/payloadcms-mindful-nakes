@@ -94,15 +94,16 @@
 ## Phase 3: Journaling Feature (Week 2-3)
 
 ### 3.1 Journal UI
-- [ ] Create `/app/journal` page
-- [ ] Build journal form (title, content, mood 1-5)
-- [ ] Implement form validation
-- [ ] Add date picker (default: today)
+- [x] Create `/app/journal` page (with authentication check)
+- [x] Build journal form (title, content, mood 1-5 with emoji selector)
+- [x] Implement form validation (content and mood required)
+- [x] Add date display (default: today, formatted in Indonesian)
 
 ### 3.2 Journal Logic
-- [ ] Create journal save server action
-- [ ] Link journal to quiz (optional: auto-link to today's quiz)
-- [ ] Implement "required after quiz" logic
+- [x] Create journal save server action (handles both create and update)
+- [x] Link journal to quiz (displays latest quiz score on journal page)
+- [x] Implement edit mode for today's journal
+- [x] Add journal history display (recent 5 entries)
 
 ---
 

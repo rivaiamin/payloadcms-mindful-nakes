@@ -38,14 +38,13 @@ CREATE POLICY "App users can update own data"
   ON public.app_users FOR UPDATE
   USING (auth.uid() = id);
 
--- Admins can read all users
+-- Admins can read all users (using JWT to avoid infinite recursion)
+-- Note: This assumes 'role' is stored in JWT claims
+-- Alternative: use a SECURITY DEFINER function if role is not in JWT
 CREATE POLICY "Admins can read all app users"
   ON public.app_users FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM public.app_users
-      WHERE id = auth.uid() AND "role" = 'admin'
-    )
+    (auth.jwt() ->> 'role')::text = 'admin'
   );
 ```
 
@@ -251,4 +250,5 @@ LIMIT 1;
 4. Test triggers work correctly
 5. **Important:** The `created_at` timestamp in `daily_quiz` is critical for 24-hour validity checks
 6. Update existing `category` values from 'ringan' to 'rendah' if migrating from old schema
+7. **RLS Fix:** If you encounter "infinite recursion detected in policy" error, update the admin policy to use JWT claims instead of querying app_users table (see policy definition above)
 
